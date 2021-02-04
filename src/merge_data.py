@@ -31,7 +31,7 @@ def merge_datasets(input_time, output_dir):
     # merge dataframe
     df = merge_dataframe(check_jsonl_list)
 
-    file_name = since_time+"_"+until_time+"_"+'merged.jsonl'
+    file_name = input_time_str+"_"+'merged.jsonl'
     save_datasets(df, Path(output_dir), file_name)
 
 if __name__ == '__main__':
