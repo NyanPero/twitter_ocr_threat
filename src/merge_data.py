@@ -9,7 +9,15 @@ def save_datasets(df, output_dir, file_name):
     # jsonl paths and flag path
     out_path = output_dir / file_name
     df.to_json(str(out_path), orient='records', lines=True)
+
+def merge_dataframe(jsonl_files):
+    df_list = []
     
+    for jsonl_file in jsonl_files:
+        df = pd.read_json(StringIO(jsonl_file.read_text()), orient='records', lines=True)
+        df_list.append(df)
+    concatenated_df = pd.concat(df_list, axis=0)
+    return concatenated_df.drop_duplicates(subset="url")
 
 def extract_jsonl_list(since_time, until_time, file_names):
     
@@ -25,45 +33,22 @@ def extract_jsonl_list(since_time, until_time, file_names):
     
     return check_jsonl_list
 
-def create_dataframe(jsonl_files):
-
-    df_list = []
-    
-    for jsonl_file in jsonl_files:
-        df = pd.read_json(StringIO(jsonl_file.read_text()), orient='records', lines=True)
-        df_list.append(df)
-    
-    return pd.concat(df_list, axis=0)
-
-def clean_dataframe(df, keyword):
-    df_images = df[df['media'].str.len() > 0]
-    df_only_keyword = df_images[df_images['content'].str.contains(keyword, case=False)]
-    keyword_series = pd.Series([keyword]*len(df_only_keyword), index=df_only_keyword.index, name='keyword')
-    new_df = pd.concat([df_only_keyword,keyword_series], axis=1)
-    return new_df
-
 
 @click.command()
 @click.option('--since-time')
 @click.option('--until-time')
-@click.option('--target-dir')
 @click.option('--output-dir')
-@click.option('--keyword')
-def clean_datasets(since_time, until_time, target_dir, output_dir, keyword):
+def merge_datasets(since_time, until_time, output_dir):
     # extract jsonl files
-    file_names = Path(target_dir).glob('*.jsonl')
+    file_names = Path(output_dir).glob('*.jsonl')
     check_jsonl_list = extract_jsonl_list(since_time, until_time, file_names)
     
-    # create dataframe
-    df = create_dataframe(check_jsonl_list)
-    
-    # exclude not target tweet
-    target_df = clean_dataframe(df,keyword)
+    # merge dataframe
+    df = merge_dataframe(check_jsonl_list)
 
-    file_name = since_time+"_"+until_time+"_"+keyword+'.jsonl'
+    file_name = since_time+"_"+until_time+"_"+'merged.jsonl'
     print (file_name)
-    save_datasets(target_df, Path(output_dir), file_name)
+    save_datasets(df, Path(output_dir), file_name)
 
 if __name__ == '__main__':
-    clean_datasets()
-    
+    merge_datasets()
