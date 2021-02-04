@@ -19,6 +19,7 @@ SIM_THRESHOLD = 140
 def save_datasets(df, output_dir, file_name):
     # jsonl paths and flag path
     out_path = output_dir / file_name
+    print (str(out_path))
     df.to_json(str(out_path), orient='records', lines=True)
 
 def apply_ocr(target_image_list):

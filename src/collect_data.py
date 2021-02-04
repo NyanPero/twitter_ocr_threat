@@ -8,6 +8,7 @@ from pathlib import Path
 def save_datasets(df, output_dir, file_name):
     # jsonl paths and flag path
     out_path = output_dir / file_name
+    print (str(out_path))
     df.to_json(str(out_path), orient='records', lines=True)
     
 
@@ -61,7 +62,6 @@ def clean_datasets(since_time, until_time, target_dir, output_dir, keyword):
     target_df = clean_dataframe(df,keyword)
 
     file_name = since_time+"_"+until_time+"_"+keyword+'.jsonl'
-    print (file_name)
     save_datasets(target_df, Path(output_dir), file_name)
 
 if __name__ == '__main__':
