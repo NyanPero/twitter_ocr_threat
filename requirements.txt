@@ -1,0 +1,11 @@
+docker>=3.3.0
+click>=7.0
+pandas
+numpy
+sklearn
+matplotlib
+seaborn
+category_encoders
+pyocr
+pillow
+opencv-python
