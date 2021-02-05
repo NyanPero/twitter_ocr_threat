@@ -13,7 +13,7 @@ def save_datasets(df, output_dir, file_name):
     print (str(out_path))
     df.to_json(str(out_path), orient='records', lines=True)
 
-def check_urls(text_list):
+def check_urls(text_list, tld_list):
     results = []
     
     url_pattern = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
@@ -40,16 +40,35 @@ def check_urls(text_list):
             matched_results = url_pattern.search(target_text)
             if matched_results:
                 results.append(matched_results.group())
-    return (list(set(results)))
+    uniq_url_list = (list(set(results)))
+    delete_not_tld = []
+    for uniq_url in uniq_url_list:
+        tld = uniq_url.split("/")[2].split(".")[-1].lower()
+        if tld in tld_list:
+            delete_not_tld.append(uniq_url)
+
+    return delete_not_tld
+
+def get_tld_list(tld_file_path):
+    tld_list = []
+    with open(tld_file_path, 'r') as f:
+        for index, line in enumerate(f):
+            if index <= 0:
+                continue
+            tld_list.append(line.strip().lower())
+    return tld_list
+
 
 @click.command()
 @click.option('--input-file')
 @click.option('--output-dir')
-def collect_threats(input_file, output_dir):
+@click.option('--tld-file')
+def collect_threats(input_file, output_dir, tld_file):
     url_list = []
+    tld_list = get_tld_list(tld_file)
     df = pd.read_json(StringIO(Path(input_file).read_text()), orient='records', lines=True)
     for index, row in df.iterrows():
-        url_results = check_urls(row['ocr_text'])
+        url_results = check_urls(row['ocr_text'], tld_list)
         url_list.append(url_results)
     url_series = pd.Series(url_list, index=df.index, name='extracted_url')
     new_df = pd.concat([df,url_series], axis=1)
