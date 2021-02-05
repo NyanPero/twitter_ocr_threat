@@ -105,8 +105,9 @@ def extract_texts(input_file, output_dir, source_dir):
         text_list.append(extracted_texts)
     ocr_series = pd.Series(text_list, index=df.index, name='ocr_text')
     new_df = pd.concat([df,ocr_series], axis=1)
+    new_df_droped = new_df[len(new_df['ocr_text'])>0]
     file_name = input_file.replace('.jsonl','_orc.jsonl')
-    save_datasets(new_df, Path(output_dir), file_name)
+    save_datasets(new_df_dropped, Path(output_dir), file_name)
 
 
 if __name__ == '__main__':

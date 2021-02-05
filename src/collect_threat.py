@@ -53,8 +53,9 @@ def collect_threats(input_file, output_dir):
         url_list.append(url_results)
     url_series = pd.Series(url_list, index=df.index, name='extracted_url')
     new_df = pd.concat([df,url_series], axis=1)
+    new_df_dropped = new_df[len(new_df['extracted_url']>0)]
     file_name = input_file.replace('.jsonl','_threat.jsonl')
-    save_datasets(new_df, Path(output_dir), file_name)
+    save_datasets(new_df_dropped, Path(output_dir), file_name)
 
 
 if __name__ == '__main__':
