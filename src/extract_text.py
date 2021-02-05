@@ -17,14 +17,12 @@ IMG_SIZE = (200, 200)
 SIM_THRESHOLD = 140
 
 def save_datasets(df, output_dir, file_name):
-    print ("### save_datasets ###")
     # jsonl paths and flag path
     out_path = output_dir / file_name
     print (str(out_path))
     df.to_json(str(out_path), orient='records', lines=True)
 
 def apply_ocr(target_image_list):
-    print ("### apply_ocr ###")
     results_target = []
     tool = pyocr.get_available_tools()[0]
     for target_pil in target_image_list:
@@ -40,7 +38,6 @@ def apply_ocr(target_image_list):
     return results_target
 
 def matching_features(source_list, target_list):
-    print ("### matching_features ###")
     results_target = []
     for index, target_pil in enumerate(target_list):
         #pil -> opencv
@@ -72,7 +69,6 @@ def matching_features(source_list, target_list):
     return results_target
 
 def download_image(dict_list):
-    print ("### donwload image ###")
     image_list = []
     for media_dict in dict_list:
         try:
@@ -90,7 +86,6 @@ def download_image(dict_list):
 @click.option('--output-dir')
 @click.option('--source-dir')
 def extract_texts(input_file, output_dir, source_dir):
-    print ("### extract_texts ###")
     df = pd.read_json(StringIO(Path(input_file).read_text()), orient='records', lines=True)
     print (df)
     text_list = []
