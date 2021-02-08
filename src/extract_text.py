@@ -92,7 +92,6 @@ def extract_texts(input_file, output_dir, source_dir):
     for index, row in df.iterrows():
         # get image list
         image_list = download_image(row['media'])
-        print (image_list)
         if not image_list:
             text_list.append([])
             continue
