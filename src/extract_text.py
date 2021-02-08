@@ -33,7 +33,6 @@ def apply_ocr(target_image_list):
             lang="jpn+eng",
             builder=pyocr.builders.TextBuilder(tesseract_layout=6)
         )
-        print (ocr_text)
         results_target.append(ocr_text.replace('\n','[new_line]'))
     return results_target
 
@@ -61,7 +60,6 @@ def matching_features(source_list, target_list):
             except:
                 continue
         results_score.sort()
-        print (results_score)
         if not results_score:
             continue
         if results_score[0] <= SIM_THRESHOLD:
@@ -87,7 +85,6 @@ def download_image(dict_list):
 @click.option('--source-dir')
 def extract_texts(input_file, output_dir, source_dir):
     df = pd.read_json(StringIO(Path(input_file).read_text()), orient='records', lines=True)
-    print (df)
     text_list = []
     for index, row in df.iterrows():
         # get image list
