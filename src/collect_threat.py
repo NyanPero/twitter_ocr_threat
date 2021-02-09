@@ -250,10 +250,11 @@ def collect_threats(input_file, output_dir, tld_file):
     email_series = pd.Series(email_list, index=df.index, name='extracted_email')
     phone_series = pd.Series(phone_list, index=df.index, name='extracted_phone')
 
-    new_df = pd.concat([df,url_series,domain_series,email_series,phone_series], axis=1)
-    new_df_dropped = new_df[new_df.astype(str)['extracted_url'] != '[]' & new_df.astype(str)['extracted_domain'] != '[]' & new_df.astype(str)['extracted_email'] != '[]' & new_df.astype(str)['extracted_phone'] != '[]']
+    new_df = pd.concat([df, url_series, domain_series, email_series, phone_series], axis=1)
+
+    #new_df_dropped = new_df[new_df.astype(str)['extracted_url'] != '[]' & new_df.astype(str)['extracted_domain'] != '[]' & new_df.astype(str)['extracted_email'] != '[]' & new_df.astype(str)['extracted_phone'] != '[]']
     file_name = input_file.replace('.jsonl','_threat.jsonl')
-    save_datasets(new_df_dropped, Path(output_dir), file_name)
+    save_datasets(new_df, Path(output_dir), file_name)
 
 
 if __name__ == '__main__':
