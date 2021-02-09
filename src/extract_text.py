@@ -26,14 +26,28 @@ def apply_ocr(target_image_list):
     results_target = []
     tool = pyocr.get_available_tools()[0]
     for target_pil in target_image_list:
-        #pil -> opencv
-        #target_opencv = np.array(target_pil, dtype=np.uint8)
-        ocr_text = tool.image_to_string(
+        # jpg+eng
+        ocr_text_je = tool.image_to_string(
             target_pil,
             lang="jpn+eng",
             builder=pyocr.builders.TextBuilder(tesseract_layout=6)
         )
-        results_target.append(ocr_text.replace('\n','[new_line]'))
+        results_target.append(ocr_text_je.replace('\n','[new_line]'))
+        # eng+jpg
+        ocr_text_ej = tool.image_to_string(
+            target_pil,
+            lang="eng+jpg",
+            builder=pyocr.builders.TextBuilder(tesseract_layout=6)
+        )
+        results_target.append(ocr_text_ej.replace('\n','[new_line]'))
+        # eng
+        ocr_text_e = tool.image_to_string(
+            target_pil,
+            lang="eng",
+            builder=pyocr.builders.TextBuilder(tesseract_layout=6)
+        )
+        results_target.append(ocr_text_e.replace('\n','[new_line]'))
+
     return results_target
 
 def matching_features(source_list, target_list):
