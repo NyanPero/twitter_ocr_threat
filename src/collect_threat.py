@@ -203,7 +203,7 @@ def check_urls(text_list, tld_list):
         tld = result.split("/")[2].split(".")[-1].lower()
         if tld in tld_list:
             url_list.append(result)
-            top_url = '.'join(result.split(".")[0:3])
+            top_url = '.'.join(result.split(".")[0:3])
             url_list.append(top_url)
     
     uniq_url_list = (list(set(url_list)))
