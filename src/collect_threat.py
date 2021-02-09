@@ -40,14 +40,17 @@ def check_urls(text_list, tld_list):
             matched_results = url_pattern.search(target_text)
             if matched_results:
                 results.append(matched_results.group())
-    uniq_url_list = (list(set(results)))
-    delete_not_tld = []
-    for uniq_url in uniq_url_list:
-        tld = uniq_url.split("/")[2].split(".")[-1].lower()
+    url_list = []
+    for result in results:
+        tld = result.split("/")[2].split(".")[-1].lower()
         if tld in tld_list:
-            delete_not_tld.append(uniq_url)
+            url_list.append(result)
+            top_url = '.'join(result.split(".")[0:3])
+            url_list.append(top_url)
+    
+    uniq_url_list = (list(set(url_list)))
 
-    return delete_not_tld
+    return uniq_url_list
 
 def get_tld_list(tld_file_path):
     tld_list = []
