@@ -18,12 +18,14 @@ def save_datasets_json(info_list, output_dir, file_name):
 @click.option('--input-file')
 @click.option('--output-dir')
 def create_urls_datasets(input_file, output_dir):
-    df = pd.read_json(StringIO(Path(input_file).read_text()), orient='records', lines=True)
-    url_list = list(set(sum(list(df['extracted_url']),[])))
+    url_list = []
     info_list = []
-    for u in url_list:
-        info_list.append({"phish_url":u})
-
+    df = pd.read_json(StringIO(Path(input_file).read_text()), orient='records', lines=True)
+    
+    for index, row in df.iterrows():
+        if row['extracted_url'] not in url_list:
+            url_list.append(row['extracted_url'])
+            info_list.append({"phish_url":row['extracted_url'], "post_id":str(row['id'])})
     file_name = input_file.replace('.jsonl','_urls.jsonl')
     save_datasets_json(info_list, Path(output_dir), file_name)
 
