@@ -8,7 +8,7 @@ import json
 
 def save_datasets_json(info_list, output_dir, file_name):
     out_path = output_dir / file_name
-    print (str(file_name))
+    print (str(file_name).split("/")[-1])
     result_dict = { "urls": info_list}
     out_file = open(str(out_path),"w")
     json.dump(result_dict, out_file, ensure_ascii=False)
