@@ -26,7 +26,7 @@ def create_urls_datasets(input_file, output_dir):
         if row['extracted_url'] not in url_list:
             url_list.append(row['extracted_url'])
             info_list.append({"phish_url":row['extracted_url'], "post_id":str(row['id'])})
-    file_name = input_file.replace('.jsonl','_urls.jsonl')
+    file_name = input_file.replace('.jsonl','_urls.json')
     save_datasets_json(info_list, Path(output_dir), file_name)
 
 if __name__ == '__main__':
