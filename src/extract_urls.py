@@ -23,10 +23,10 @@ def create_urls_datasets(input_file, output_dir):
     df = pd.read_json(StringIO(Path(input_file).read_text()), orient='records', lines=True)
     
     for index, row in df.iterrows():
-        for url in row['extracted_url']:
+        for index_r, url in enumerate(row['extracted_url']):
             if url not in url_list:
                 url_list.append(url)
-                info_list.append({"phish_url":url, "post_id":str(row['id'])})
+                info_list.append({"phish_url":url, "post_id":str(row['id'])+"_"+str(index_r)})
     file_name = input_file.replace('.jsonl','_urls.json')
     save_datasets_json(info_list, Path(output_dir), file_name)
 
